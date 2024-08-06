@@ -1,0 +1,19 @@
+nano .gitignore
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environment folders
+venv/
+ENV/
+
+# Ignore other OS-specific or editor-specific files
+.DS_Store
+Thumbs.db
+.vscode/
+
+X
