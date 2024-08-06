@@ -44,7 +44,7 @@ app = Flask(__name__)
 # Flask Routes
 #################################################
 
-# Define the most recent date
+#  the most recent date
 most_recent_date = "2017-08-23"
 
 @app.route("/")
@@ -60,20 +60,20 @@ def home():
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
-    # Import datetime module inside the function
+    # Import dt
     import datetime as dt
     
-    # Create session (link) from Python to the DB
+    # Create session (link) 
     session = Session(engine)
     
-    # Perform a query to retrieve the data and precipitation scores
+    # query to retrieve the data and precipitation scores
     one_year_ago = dt.datetime.strptime(most_recent_date, '%Y-%m-%d') - dt.timedelta(days=365)
     precipitation_data = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= one_year_ago).all()
     
     # Close session
     session.close()
     
-    # Create a dictionary from the row data and append to a list of all_precipitation
+    # dictionary from the row data and append to a list of all_precipitation
     all_precipitation = []
     for date, prcp in precipitation_data:
         precipitation_dict = {}
@@ -85,25 +85,25 @@ def precipitation():
 
 @app.route("/api/v1.0/stations")
 def stations():
-    # Create session (link) from Python to the DB
+    # Create session 
     session = Session(engine)
     
-    # Perform a query to retrieve all stations
+    # query to retrieve all stations
     results = session.query(Station.station).all()
     
     # Close session
     session.close()
     
-    # Convert list of tuples into normal list
+    # Convert tuples into normal list
     all_stations = list(np.ravel(results))
     return jsonify(all_stations)
 
 @app.route("/api/v1.0/tobs")
 def tobs():
-    # Import datetime module inside the function
+    # Import dt
     import datetime as dt
     
-    # Create session (link) from Python to the DB
+    # Create session 
     session = Session(engine)
     
     # Find the most active station
@@ -111,7 +111,7 @@ def tobs():
         group_by(Measurement.station).\
         order_by(func.count(Measurement.id).desc()).first()[0]
     
-    # Perform a query to retrieve the last 12 months of temperature observation data
+    # query to retrieve the last 12 months of tob data
     one_year_ago = dt.datetime.strptime(most_recent_date, '%Y-%m-%d') - dt.timedelta(days=365)
     temperature_data = session.query(Measurement.date, Measurement.tobs).\
         filter(Measurement.station == most_active_station_id).\
@@ -132,10 +132,10 @@ def tobs():
 
 @app.route("/api/v1.0/<start>")
 def start(start):
-    # Create session (link) from Python to the DB
+    # Create session 
     session = Session(engine)
     
-    # Perform a query to retrieve the min, avg, and max temperatures for all dates greater than and equal to the start date
+    # retrieve the min, avg, and max temperatures for all dates greater than and equal to the start date
     results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date >= start).all()
     
@@ -148,10 +148,10 @@ def start(start):
 
 @app.route("/api/v1.0/<start>/<end>")
 def start_end(start, end):
-    # Create session (link) from Python to the DB
+    # Create session 
     session = Session(engine)
     
-    # Perform a query to retrieve the min, avg, and max temperatures for dates between the start and end date inclusive
+    # retrieve the min, avg, and max temperatures for dates between the start and end date inclusive
     results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date >= start).filter(Measurement.date <= end).all()
     
